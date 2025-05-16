@@ -39,9 +39,11 @@ export default function deleteMessages(client) {
       isMedia ? deleteMediaLog : deleteMessageLog,
     );
     if (!logChannel) return;
-
+    
+    
     if(!isMedia)
-      if(message.channel.id === settings.medyaChannel)
+      //if(message.channel.id === settings.medyaChannel)
+      if(settings.medyaChannel?.includes(message.channel.id))
           return;
 
     // Embed oluştur

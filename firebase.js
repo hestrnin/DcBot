@@ -1,18 +1,18 @@
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { readFileSync } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import * as dotenv from "dotenv";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config(); // .env dosyasını yükle
 
-const jsonPath = path.join(__dirname, "firebase-key.json");
-const jsonData = JSON.parse(readFileSync(jsonPath, "utf8"));
+const firebaseConfig = {
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+};
 
 if (!getApps().length) {
   initializeApp({
-    credential: cert(jsonData),
+    credential: cert(firebaseConfig),
   });
 }
 

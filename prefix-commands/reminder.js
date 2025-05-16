@@ -10,7 +10,7 @@ export default async function handleReminder(message) {
     console.log(`Yeni ayar oluşturuldu: ${message.guild.id}`);
   }
   const hasAdmin = message.member?.permissions.has(PermissionFlagsBits.Administrator);
-  const hasRole = message.member.roles.cache?.has(settings.reminderRole);
+  const hasRole = message.member.roles.cache?.has(settings?.reminderRole);
 
   if (!hasAdmin && !hasRole) {
     const response = {

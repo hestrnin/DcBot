@@ -7,12 +7,12 @@ export default function (client) {
     const settings = await getSettings(message.guild.id);
     if (!settings) {
       await saveSettings(message.guild.id, { medyaChannel: {}, mediaChannelLog: "" });
-      console.log(`Yeni ayar oluşturuldu: ${interaction.guild.id}`);
+      console.log(`Yeni ayar oluşturuldu: ${message.guild.id}`);
     }
 
     if (message.author.bot) return;
 
-    if(!settings.medyaChannel?.includes(message.channel.id)) return;
+    if(!settings?.medyaChannel?.includes(message.channel.id)) return;
 
     const { mediaChannelLog } = settings;
     // YouTube/Spotify gibi önizlemeli linkler için özel kontrol

@@ -15,7 +15,7 @@ export default function messageCreateHandler(client) {
     
     const channelId = message.channel.id;
 
-    const emojis = settings.autoReaction?.[channelId] || {};
+    const emojis = settings?.autoReaction?.[channelId] || {};
     if (!emojis || !Array.isArray(emojis)) return;
 
     // Bu kısmı, emojis.forEach içinde veya map içinde yapabilirsin
