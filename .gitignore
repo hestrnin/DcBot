@@ -1,0 +1,4 @@
+node_modules/
+.env
+prefix-commands/csc.js
+settings.json
