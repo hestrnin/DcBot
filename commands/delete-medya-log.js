@@ -24,7 +24,7 @@ export default {
     const hasRole = interaction.member.roles.cache?.has(settings.permissionRole);
     if (!hasAdmin && !hasRole) {
       const response = {
-        content: "❌ Bu komutu kullanmak için yetkin yok!",
+        content: "❌ delete-medya-log Bu komutu kullanmak için yetkin yok!",
         flags: MessageFlags.Ephemeral
       };
 

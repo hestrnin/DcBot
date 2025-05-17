@@ -2,6 +2,7 @@ console.log("Loaded event: reminder");
 import { PermissionFlagsBits } from "discord.js";
 import { MessageFlags } from 'discord-api-types/v10';
 import { getSettings, saveSettings } from "../utils/firebase-settings.js";
+import ms from "ms";
 
 export default async function handleReminder(message) {
   const settings = await getSettings(message.guild.id);
@@ -14,12 +15,13 @@ export default async function handleReminder(message) {
 
   if (!hasAdmin && !hasRole) {
     const response = {
-      content: "❌ Bu komutu kullanmak için yetkin yok!",
+      content: "❌ Bu reminder komutu kullanmak için yetkin yok!",
       flags: MessageFlags.Ephemeral
     };
 
     if (!message.replied && !message.deferred) {
-      await message.reply(response);
+      if(!message)
+        await message.reply(response);
     } else {
       await message.followUp(response);
     }
@@ -35,7 +37,6 @@ export default async function handleReminder(message) {
     .split(/\s+/);
   if (cmd !== "reminder") return;
 
-  const ms = require("ms");
   const timeArg = args[0];
   const text = args.slice(1).join(" ");
   const duration = ms(timeArg);

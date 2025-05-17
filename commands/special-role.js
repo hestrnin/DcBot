@@ -24,7 +24,7 @@ export default {
       
       if (!hasAdmin) {
         const response = {
-          content: "❌ Bu komutu kullanmak için yetkin yok!",
+          content: "❌special-role Bu komutu kullanmak için yetkin yok!",
           flags: MessageFlags.Ephemeral
         };
   

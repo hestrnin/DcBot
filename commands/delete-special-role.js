@@ -27,7 +27,7 @@ export default {
 
     if (!hasAdmin) {
       return await interaction.editReply({
-        content: "❌ Bu komutu kullanmak için yetkin yok!",
+        content: "❌ delete-special-role Bu komutu kullanmak için yetkin yok!",
         ephemeral: true
       });
     }

@@ -21,7 +21,7 @@ export default {
       
       if (!hasAdmin) {
         const response = {
-          content: "❌ Bu komutu kullanmak için yetkin yok!",
+          content: "❌ delete-reminder-role Bu komutu kullanmak için yetkin yok!",
           flags: MessageFlags.Ephemeral
         };
   
