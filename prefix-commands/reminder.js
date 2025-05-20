@@ -10,6 +10,16 @@ export default async function handleReminder(message) {
     await saveSettings(message.guild.id, { reminderRole: "" });
     console.log(`Yeni ayar oluşturuldu: ${message.guild.id}`);
   }
+  
+  const prefix = "d!";
+  if (!message.content.startsWith(prefix)) return;
+
+  const [cmd, ...args] = message.content
+    .slice(prefix.length)
+    .trim()
+    .split(/\s+/);
+  if (cmd !== "reminder") return;
+  
   const hasAdmin = message.member?.permissions.has(PermissionFlagsBits.Administrator);
   const hasRole = message.member.roles.cache?.has(settings?.reminderRole);
 
@@ -28,14 +38,6 @@ export default async function handleReminder(message) {
 
     return;
   }
-  const prefix = "d!";
-  if (!message.content.startsWith(prefix)) return;
-
-  const [cmd, ...args] = message.content
-    .slice(prefix.length)
-    .trim()
-    .split(/\s+/);
-  if (cmd !== "reminder") return;
 
   const timeArg = args[0];
   const text = args.slice(1).join(" ");
@@ -51,7 +53,7 @@ export default async function handleReminder(message) {
 
   setTimeout(() => {
     message.delete().catch(console.error);
-    sentMessage.delete().catch(console.error);
+    //sentMessage.delete().catch(console.error);
   }, 2000);
 
   setTimeout(() => {

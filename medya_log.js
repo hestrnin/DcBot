@@ -6,12 +6,13 @@ export default function (client) {
   client.on("messageCreate", async (message) => {
     const settings = await getSettings(message.guild.id);
     if (!settings) {
-      await saveSettings(message.guild.id, { medyaChannel: {}, mediaChannelLog: "" });
+      await saveSettings(message.guild.id, { medyaChannel: [], mediaChannelLog: "" });
       console.log(`Yeni ayar oluşturuldu: ${message.guild.id}`);
     }
 
     if (message.author.bot) return;
-
+    if(settings.medyaChannel.length === 0) return;
+    console.log(settings.medyaChannel.length);
     if(!settings?.medyaChannel?.includes(message.channel.id)) return;
 
     const { mediaChannelLog } = settings;

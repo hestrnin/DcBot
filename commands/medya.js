@@ -21,7 +21,7 @@ export default {
 
     const settings = await getSettings(interaction.guild.id);
     if (!settings) {
-      await saveSettings(interaction.guild.id, { medyaChannel: {}, permissionRole: "" });
+      await saveSettings(interaction.guild.id, { medyaChannel: [], permissionRole: "" });
       console.log(`Yeni ayar oluşturuldu: ${interaction.guild.id}`);
     }
     await interaction.deferReply({ content: 'Komut çalıştı!', flags: MessageFlags.Ephemeral });

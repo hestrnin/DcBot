@@ -9,7 +9,7 @@ export default function deleteMessages(client) {
     
     const settings = await getSettings(message.guild.id);
     if (!settings) {
-      await saveSettings(message.guild.id, { ignoredChannels: {}, deleteMessageLog: "", deleteMediaLog: "" });
+      await saveSettings(message.guild.id, { ignoredChannels: [], deleteMessageLog: "", deleteMediaLog: "" });
       console.log(`Yeni ayar oluşturuldu: ${message.guild.id}`);
     }
     // Bot mesajlarını ve geçersiz kanalları ignore et
