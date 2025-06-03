@@ -49,7 +49,6 @@ export default {
 
       const yeniKelime = kelime.toLowerCase();
 
-      console.log(listData);
       if (mevcutKelimeler.includes(yeniKelime)) {
         
         await channelKelimeler.send({ content: `⚠️ '${kelime}' kelimesi '${liste}' listesinde zaten var.`});
