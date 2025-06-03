@@ -11,7 +11,7 @@ import handleReminder from "./prefix-commands/reminder.js";
 import medyaLog from "./medya_log.js";
 import deleteMessages from "./delete_messages.js";
 import messageCreateHandler from "./events/messageCreate.js";
-import { setupTabuPanel } from './tabugame/setupPanel.js';
+//import { setupTabuPanel } from './tabugame/setupPanel.js';
 
 // __dirname alternatifi
 const __filename = fileURLToPath(import.meta.url);
@@ -97,7 +97,7 @@ async function startBot() {
   
 client.once("ready", async () => {
   console.log(`Bot aktif: ${client.user.tag}`);
-    await setupTabuPanel(client);
+    //await setupTabuPanel(client);
     await client.application.commands.set([
     {
       name: "log-kanali-ayarla",
