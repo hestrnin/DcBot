@@ -35,8 +35,15 @@ export default {
     }
 
     try {
+      
       await addTabuWordToList(liste, kelime, yasakliKelimeler);
-
+      const result = await addTabuWordToList(liste, kelime, yasakliKelimeler);
+      if (!result.success) {
+        await interaction.editReply({
+          content: `⚠️ ${result.reason}`,
+        });
+        return;
+      }
       const embed = new EmbedBuilder()
         .setTitle('🟣 Yeni Tabu Kelimesi Eklendi')
         .addFields(

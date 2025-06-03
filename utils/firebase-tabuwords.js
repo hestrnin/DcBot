@@ -2,25 +2,27 @@ import db from "../firebase.js";
 import { FieldValue } from 'firebase-admin/firestore';
 
 // Kelime ekle
-export async function addTabuWordToList(listId, keyword, forbidden) {
+export async function addTabuWordToList(listName, keyword, forbiddenWords) {
   try {
-    const listRef = db.collection('tabu_lists').doc(listId);
-    const doc = await listRef.get();
+    const listRef = db.collection("tabu_lists").doc(listName);
+    const listDoc = await listRef.get();
 
-    const newWord = { keyword, forbidden };
+    // Liste daha önce oluşturulmamışsa boş bir obje ile başlat
+    const listData = listDoc.exists ? listDoc.data() : {};
 
-    if (doc.exists) {
-      // Mevcut listeye ekle
-      await listRef.update({
-        words: FieldValue.arrayUnion(newWord),
-      });
-    } else {
-      // Yeni liste oluştur
-      await listRef.set({
-        words: [newWord],
-      });
+    // Aynı kelime daha önce eklenmiş mi kontrolü
+    if (listData[keyword]) {
+    return { success: false, reason: `'${keyword}' kelimesi bu listede zaten var.` };
     }
-    return true;
+
+    // Yeni kelimeyi ekle
+    const updatedData = {
+        ...listData,
+        [keyword]: forbiddenWords
+    };
+
+    await listRef.set(updatedData);
+  return { success: true };
   } catch (err) {
     console.error('Tabu listeye ekleme hatası:', err);
     throw err;
