@@ -20,7 +20,7 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
 
     // Eğer bu keyword zaten varsa atla
     if (mevcutKelimeler.includes(yeniKelime)) {
-      await interaction.send({ content: `⚠️ '${word.keyword}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
+      await interaction.editReply({ content: `⚠️ '${word.keyword}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
       console.log(`⚠️ '${word.keyword}' kelimesi '${listeAdi}' listesinde zaten var, atlandı.`);
       continue;
     }
