@@ -20,7 +20,7 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
 
     // Eğer bu keyword zaten varsa atla
     if (mevcutKelimeler.includes(yeniKelime)) {
-      await interaction.channel.send({ content: `⚠️ '${word.keyword}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
+      await interaction.send({ content: `⚠️ '${word.keyword}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
       console.log(`⚠️ '${word.keyword}' kelimesi '${listeAdi}' listesinde zaten var, atlandı.`);
       continue;
     }
@@ -43,7 +43,7 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
       )
       .setColor("Random")
       .setTimestamp();
-    await interaction.channel.send({ embeds: [embed] });
+    await interaction.send({ embeds: [embed] });
     console.log(`✅ '${word.keyword}' kelimesi '${listeAdi}' listesine eklendi.`);
   }
 

@@ -8,6 +8,7 @@ import { test } from '../utils/importFromJson.js';
 export async function setupTabuPanel(client) {
   const guild = client.guilds.cache.first();
   const channel = guild.channels.cache.find(c => c.name === 'tabu-oyna' && c.isTextBased());
+  const channelKelimeler = guild.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
 
   if (!channel) {
     console.warn('📛 #tabu-oyna kanalı bulunamadı.');
@@ -26,7 +27,7 @@ export async function setupTabuPanel(client) {
         if (interaction.isButton()) {
             console.log(`Butona basıldı: ${interaction.customId}`);
             if (interaction.customId === 'topluekle') {
-                await test(interaction);
+                await test(channelKelimeler);
             }
         }
     });

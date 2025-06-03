@@ -29,6 +29,7 @@ export default {
     console.log('🟡 /tabu-kelime komutu tetiklendi');
 
     await interaction.deferReply({ flags: 1 << 6 });
+    const channelKelimeler = interaction.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
 
     const liste = toTitleCase(interaction.options.getString('liste'));
     const kelime = toTitleCase(interaction.options.getString('kelime'));
@@ -51,7 +52,7 @@ export default {
       console.log(listData);
       if (mevcutKelimeler.includes(yeniKelime)) {
         
-        await interaction.editReply({ content: `⚠️ '${kelime}' kelimesi '${liste}' listesinde zaten var.`});
+        await channelKelimeler.send({ content: `⚠️ '${kelime}' kelimesi '${liste}' listesinde zaten var.`});
         return;
       }
 
@@ -70,9 +71,7 @@ export default {
         .setColor('Purple')
         .setTimestamp();
 
-      await interaction.channel.send({ embeds: [embed] });
-
-      await interaction.editReply({ content: '✅ Kelime başarıyla eklendi.' });
+      await channelKelimeler.send({ embeds: [embed] });
 
     } catch (err) {
       console.error('🔥 Hata:', err);
