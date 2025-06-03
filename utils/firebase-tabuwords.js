@@ -1,5 +1,4 @@
 import db from "../firebase.js";
-import { FieldValue } from 'firebase-admin/firestore';
 
 // Kelime ekle
 export async function addTabuWordToList(listName, keyword, forbiddenWords) {
@@ -10,11 +9,6 @@ export async function addTabuWordToList(listName, keyword, forbiddenWords) {
     // Liste daha önce oluşturulmamışsa boş bir obje ile başlat
     const listData = listDoc.exists ? listDoc.data() : {};
 
-    // Aynı kelime daha önce eklenmiş mi kontrolü
-    if (listData[keyword]) {
-    return { success: false, reason: `'${keyword}' kelimesi bu listede zaten var.` };
-    }
-
     // Yeni kelimeyi ekle
     const updatedData = {
         ...listData,
@@ -22,11 +16,41 @@ export async function addTabuWordToList(listName, keyword, forbiddenWords) {
     };
 
     await listRef.set(updatedData);
-  return { success: true };
+    
   } catch (err) {
     console.error('Tabu listeye ekleme hatası:', err);
     throw err;
   }
+}
+
+//Toplu Kelime Girme
+export async function topluTabuKelimeleriEkle(kelimeListesi) {
+  for (const word of kelimeListesi) {
+    const listeAdi = word.liste || "Genel"; // Liste adı yoksa 'Genel' varsayılan
+
+    const docRef = db.collection("tabu_lists").doc(listeAdi); // Belirli liste dokümanı
+    const docSnap = await docRef.get(); // Liste dokümanını çek
+
+    const kelimeler = docSnap.exists ? docSnap.data() : {}; // Eğer varsa, içeriğini al
+
+    const mevcutKelimeler = Object.keys(kelimeler).map(k => k.toLowerCase());
+    const yeniKelime = word.keyword.toLowerCase(); // Anahtar (keyword) küçük harfe çevrilir (çakışma önleme)
+
+    // Eğer bu keyword zaten varsa atla
+    if (mevcutKelimeler.includes(yeniKelime)) {
+      console.log(`⚠️ '${word.keyword}' kelimesi '${listeAdi}' listesinde zaten var, atlandı.`);
+      continue;
+    }
+
+    // Yeni kelimeyi listeye ekle
+    mevcutKelimeler[yeniKelime] = word.yasaklar;
+
+    // Güncellenmiş listeyi veritabanına yaz
+    await docRef.set(mevcutKelimeler);
+    console.log(`✅ '${word.keyword}' kelimesi '${listeAdi}' listesine eklendi.`);
+  }
+
+  console.log("🚀 Tüm kelimeler işlendi.");
 }
 
 // Tüm kelimeleri al

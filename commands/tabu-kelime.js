@@ -1,5 +1,10 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { addTabuWordToList } from '../utils/firebase-tabuwords.js';
+import db from "../firebase.js";
+
+function toTitleCase(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
 export default {
   data: new SlashCommandBuilder()
@@ -25,17 +30,31 @@ export default {
 
     await interaction.deferReply({ flags: 1 << 6 });
 
-    const liste = interaction.options.getString('liste');
-    const kelime = interaction.options.getString('kelime');
+    const liste = toTitleCase(interaction.options.getString('liste'));
+    const kelime = toTitleCase(interaction.options.getString('kelime'));
     const yasakliKelimeler = [];
 
     for (let i = 1; i <= 5; i++) {
-      const yasak = interaction.options.getString(`yasak${i}`);
+      const yasak = toTitleCase(interaction.options.getString(`yasak${i}`));
       if (yasak) yasakliKelimeler.push(yasak);
     }
 
     try {
       
+      const listRef = db.collection("tabu_lists").doc(liste);
+      const listDoc = await listRef.get();
+      const listData = listDoc.exists ? listDoc.data() : {};
+      const mevcutKelimeler = Object.keys(listData).map(k => k.toLowerCase());
+
+      const yeniKelime = kelime.toLowerCase();
+
+      console.log(listData);
+      if (mevcutKelimeler.includes(yeniKelime)) {
+        
+        await interaction.editReply({ content: `⚠️ '${kelime}' kelimesi '${liste}' listesinde zaten var.`});
+        return;
+      }
+
       await addTabuWordToList(liste, kelime, yasakliKelimeler);
       
       const embed = new EmbedBuilder()
