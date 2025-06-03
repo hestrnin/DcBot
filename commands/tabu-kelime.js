@@ -29,7 +29,7 @@ export default {
     console.log('🟡 /tabu-kelime komutu tetiklendi');
 
     await interaction.deferReply({ flags: 1 << 6 });
-    const channelKelimeler = interaction.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
+    const channelKelimeler = interaction.guild.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
 
     const liste = toTitleCase(interaction.options.getString('liste'));
     const kelime = toTitleCase(interaction.options.getString('kelime'));

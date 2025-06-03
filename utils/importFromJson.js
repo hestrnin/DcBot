@@ -26,10 +26,11 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
     }
 
     // Yeni kelimeyi listeye ekle
-    mevcutKelimeler[yeniKelime] = word.yasaklar;
+    kelimeler[yeniKelime] = word.yasaklar;
 
     // Güncellenmiş listeyi veritabanına yaz
-    await docRef.set(mevcutKelimeler);
+    await docRef.set(kelimeler);
+
     const embed = new EmbedBuilder()
       .setTitle("Yeni Tabu Kelimesi")
       .addFields(
