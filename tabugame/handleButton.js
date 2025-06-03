@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function handleTabuButton(interaction) {
   if (interaction.customId !== 'create_tabu_game') return;
 
+  let category = interaction.guild.channels.cache.find(channel => channel.type == ChannelType.GuildCategory && channel.name == "Tabu")
   const guild = interaction.guild;
   const user = interaction.user;
 
@@ -14,6 +15,7 @@ export async function handleTabuButton(interaction) {
   const voiceChannel = await guild.channels.create({
     name: `🎙️ Tabu - ${user.username}`,
     type: ChannelType.GuildVoice,
+    parent: category,
     permissionOverwrites: [
       {
         id: guild.roles.everyone,
@@ -85,5 +87,5 @@ Oyun başlamadan önce süre ve skor ayarlarını yapabilirsiniz.`,
     state: 'waiting',
   };
 
-  await interaction.reply({ content: `✅ Yeni tabu oyunu oluşturuldu: ${voiceChannel.name}`, ephemeral: true });
+  await interaction.reply({ content: `✅ Yeni tabu oyunu oluşturuldu: ${voiceChannel.name}`, flags: 1 << 6 });
 }

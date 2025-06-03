@@ -12,6 +12,8 @@ import medyaLog from "./medya_log.js";
 import deleteMessages from "./delete_messages.js";
 import messageCreateHandler from "./events/messageCreate.js";
 import { setupTabuPanel, setupBirlestirmeButon } from './tabugame/setupPanel.js';
+import { handleTabuButton } from './tabugame/handleButton.js';
+import { test } from './utils/importFromJson.js';
 
 // __dirname alternatifi
 const __filename = fileURLToPath(import.meta.url);
@@ -64,8 +66,45 @@ async function startBot() {
   await messageCreateHandler(client);
 
   client.on("interactionCreate", async (interaction) => {
-    if (!interaction.isCommand()) return;
+  // Butonlar
+  if (interaction.isButton()) {
+    const { customId, guild } = interaction;
+    console.log(`🔘 Butona basıldı: ${customId}`);
 
+    if (customId === 'create_tabu_game') {
+      try {
+        await handleTabuButton(interaction);
+      } catch (error) {
+        console.error("❌ Oyun oluşturma hatası:", error);
+        await interaction.editReply({ content: "⚠️ Oyun oluşturulurken bir hata oluştu." });
+      }
+    }
+
+    if (customId === 'topluekle') {
+      try {
+        await interaction.deferReply({ flags: 1 << 6 });
+
+        const channelKelimeler = guild.channels.cache.find(
+          c => c.name === 'tabu-kelimeler' && c.isTextBased()
+        );
+
+        if (!channelKelimeler) {
+          await interaction.editReply({ content: "⚠️ 'tabu-kelimeler' kanalı bulunamadı." });
+          return;
+        }
+
+        await test(channelKelimeler);
+      } catch (error) {
+        console.error("❌ Toplu ekleme hatası:", error);
+        await interaction.editReply({ content: "⚠️ Kelimeler eklenirken bir hata oluştu." });
+      }
+    }
+
+    return; // Buton etkileşimiydi, burada bitiriyoruz
+  }
+
+  // Slash komutlar
+  if (interaction.isCommand()) {
     const settings = await getSettings(interaction.guild.id);
     if (!settings) {
       await saveSettings(interaction.guild.id, {
@@ -85,18 +124,20 @@ async function startBot() {
       console.error(error);
       await interaction.reply({ content: "❌ Komut çalıştırılırken hata oluştu!", ephemeral: true });
     }
-  });
+  }
+});
+
 
   client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     handleReminder(message);
 
     if(message.content === "d!tabusetup"){
-      await setupTabuPanel(client);
+      await setupTabuPanel(message.guild);
     }
 
     if(message.content === "d!tabubirlestirme"){
-      await setupBirlestirmeButon(client);
+      await setupBirlestirmeButon(message.guild);
     }
 
     if (message.content === "!ping") {

@@ -1,17 +1,11 @@
 // tabugame/setupPanel.js
 import { ChannelType, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import path from 'path';
 import { readMessageId, writeMessageId } from './utils/messageStore.js';
-import { handleTabuButton } from './handleButton.js';
-import { test } from '../utils/importFromJson.js';
 
-export async function setupTabuPanel(client) {
-  const guild = client.guilds.cache.first();
+export async function setupTabuPanel(guild) {
   let category = guild.channels.cache.find(channel => channel.type == ChannelType.GuildCategory && channel.name == "Tabu")
   let channel = guild.channels.cache.find(c => c.name === 'tabu-oyna' && c.isTextBased());
   let channelKelimeler = guild.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
-
-  console.log(guild.members.me.permissions.toArray());
 
   if(!category)
   {
@@ -58,23 +52,6 @@ export async function setupTabuPanel(client) {
       });
   }
 
-    client.on('interactionCreate', async (interaction) => {
-        console.log('interaction geldi'); // bu bile gelmiyorsa çok temel bir sorun var
-
-        if (interaction.isButton()) {
-            console.log(`Butona basıldı: ${interaction.customId}`);
-            if (interaction.customId === 'create_tabu_game') {
-                await handleTabuButton(interaction);
-            }
-        }
-        if (interaction.isButton()) {
-            console.log(`Butona basıldı: ${interaction.customId}`);
-            if (interaction.customId === 'topluekle') {
-                await test(channelKelimeler);
-            }
-        }
-    });
-
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId('create_tabu_game')
@@ -104,27 +81,13 @@ export async function setupTabuPanel(client) {
   writeMessageId(panelMessage.id);
 }
 
-export async function setupBirlestirmeButon(client) {
-  const guild = client.guilds.cache.first();
+export async function setupBirlestirmeButon(guild) {
   const channel = guild.channels.cache.find(c => c.name === 'tabu-oyna' && c.isTextBased());
-  const channelKelimeler = guild.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
 
   if (!channel) {
     console.warn('📛 #tabu-oyna kanalı bulunamadı.');
     return;
   }
-
-    client.on('interactionCreate', async (interaction) => {
-        console.log('interaction geldi'); // bu bile gelmiyorsa çok temel bir sorun var
-
-        if (interaction.isButton()) {
-            console.log(`Butona basıldı: ${interaction.customId}`);
-            if (interaction.customId === 'topluekle') {
-                await test(channelKelimeler);
-            }
-        }
-    });
-
 
   const row2 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
