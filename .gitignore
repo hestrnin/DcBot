@@ -23,3 +23,5 @@ firestore-test.js
 # lock dosyaları (tercihe göre)
 package-lock.json
 yarn.lock
+
+tabugame/

@@ -11,6 +11,7 @@ import handleReminder from "./prefix-commands/reminder.js";
 import medyaLog from "./medya_log.js";
 import deleteMessages from "./delete_messages.js";
 import messageCreateHandler from "./events/messageCreate.js";
+import { setupTabuPanel } from './tabugame/setupPanel.js';
 
 // __dirname alternatifi
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +23,7 @@ const app = express();
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
@@ -95,6 +97,7 @@ async function startBot() {
   
 client.once("ready", async () => {
   console.log(`Bot aktif: ${client.user.tag}`);
+    await setupTabuPanel(client);
     await client.application.commands.set([
     {
       name: "log-kanali-ayarla",
@@ -110,6 +113,54 @@ client.once("ready", async () => {
           type: 7,
           name: "medya-log",
           description: "Silinen medyaların gideceği kanal",
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "tabu-kelime",
+      description: "Tabu oyunu için kelime ekle.",
+      options: [
+        {
+          type: 3,
+          name: "kelime",
+          description: "Anlatılacak Kelime",
+          required: true,
+        },
+        {
+          type: 3,
+          name: "yasak1",
+          description: "Yasaklı Kelime 1",
+          required: true,
+        },
+        {
+          type: 3,
+          name: "yasak2",
+          description: "Yasaklı Kelime 2",
+          required: true,
+        },
+        {
+          type: 3,
+          name: "yasak3",
+          description: "Yasaklı Kelime 3",
+          required: true,
+        },
+        {
+          type: 3,
+          name: "yasak4",
+          description: "Yasaklı Kelime 4",
+          required: true,
+        },
+        {
+          type: 3,
+          name: "yasak5",
+          description: "Yasaklı Kelime 5",
+          required: true,
+        },
+        {
+          type: 3,
+          name: "liste",
+          description: "Liste Belirt",
           required: true,
         },
       ],
