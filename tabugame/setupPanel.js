@@ -11,6 +11,8 @@ export async function setupTabuPanel(client) {
   let channel = guild.channels.cache.find(c => c.name === 'tabu-oyna' && c.isTextBased());
   let channelKelimeler = guild.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
 
+  console.log(interaction.guild.members.me.permissions.toArray());
+
   if(!category)
   {
     console.warn('📛 #tabu kategorisi bulunamadı.');
