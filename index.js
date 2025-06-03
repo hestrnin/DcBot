@@ -11,7 +11,7 @@ import handleReminder from "./prefix-commands/reminder.js";
 import medyaLog from "./medya_log.js";
 import deleteMessages from "./delete_messages.js";
 import messageCreateHandler from "./events/messageCreate.js";
-import { setupTabuPanel } from './tabugame/setupPanel.js';
+import { setupTabuPanel, setupBirlestirmeButon } from './tabugame/setupPanel.js';
 
 // __dirname alternatifi
 const __filename = fileURLToPath(import.meta.url);
@@ -89,6 +89,14 @@ async function startBot() {
     if (message.author.bot) return;
     handleReminder(message);
 
+    if(message.content === "d!tabusetup"){
+      await setupTabuPanel(client);
+    }
+
+    if(message.content === "d!tabubirlestirme"){
+      await setupBirlestirmeButon(client);
+    }
+
     if (message.content === "!ping") {
       message.channel.send("Pong!");
     }
@@ -97,7 +105,7 @@ async function startBot() {
   
 client.once("ready", async () => {
   console.log(`Bot aktif: ${client.user.tag}`);
-    await setupTabuPanel(client);
+
     await client.application.commands.set([
     {
       name: "log-kanali-ayarla",
