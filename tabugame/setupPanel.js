@@ -7,9 +7,9 @@ import { test } from '../utils/importFromJson.js';
 
 export async function setupTabuPanel(client) {
   const guild = client.guilds.cache.first();
+  let category = guild.channels.cache.find(channel => channel.type == ChannelType.GuildCategory && channel.name == "Tabu")
   let channel = guild.channels.cache.find(c => c.name === 'tabu-oyna' && c.isTextBased());
   let channelKelimeler = guild.channels.cache.find(c => c.name === 'tabu-kelimeler' && c.isTextBased());
-  let category = guild.channels.cache.find(channel => channel.type == ChannelType.GuildCategory && channel.name == "Tabu")
 
   if(!category)
   {
@@ -26,7 +26,6 @@ export async function setupTabuPanel(client) {
       });
   }
 
-  console.log(category);
   if (!channel) {
     console.warn('📛 #tabu-oyna kanalı bulunamadı.');
     channel = await guild.channels.create({
