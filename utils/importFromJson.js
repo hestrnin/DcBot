@@ -6,7 +6,11 @@ import { fileURLToPath } from "url";
 import { EmbedBuilder } from 'discord.js';
 
 function toTitleCase(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  return str
+    .toLocaleLowerCase('tr-TR')
+    .split(' ')
+    .map(word => word.charAt(0).toLocaleUpperCase('tr-TR') + word.slice(1))
+    .join(' ');
 }
 //Toplu Kelime Girme
 export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
@@ -21,15 +25,18 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
     const mevcutKelimeler = Object.keys(kelimeler).map(k => k.toLowerCase());
     const yeniKelime = word.keyword.toLowerCase(); // Anahtar (keyword) küçük harfe çevrilir (çakışma önleme)
 
+    // Yeni kelimeyi listeye ekle
+    const formattedKey = toTitleCase(yeniKelime);
+    const formattedYasaklar = word.yasaklar.map(kelime => toTitleCase(kelime));
+
     // Eğer bu keyword zaten varsa atla
     if (mevcutKelimeler.includes(yeniKelime)) {
-      await interaction.editReply({ content: `⚠️ '${toTitleCase(word.keyword)}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
-      console.log(`⚠️ '${toTitleCase(word.keyword)}' kelimesi '${listeAdi}' listesinde zaten var, atlandı.`);
+      //await interaction.editReply({ content: `⚠️ '${toTitleCase(word.keyword)}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
+      console.log(`⚠️ '${toTitleCase(formattedKey)}' kelimesi '${toTitleCase(listeAdi)}' listesinde zaten var, atlandı.`);
       continue;
     }
 
-    // Yeni kelimeyi listeye ekle
-    kelimeler[toTitleCase(yeniKelime)] = word.yasaklar;
+    kelimeler[formattedKey] = formattedYasaklar;
 
     // Güncellenmiş listeyi veritabanına yaz
     await docRef.set(kelimeler);
@@ -37,11 +44,11 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
     const embed = new EmbedBuilder()
       .setTitle("Yeni Tabu Kelimesi")
       .addFields(
-        { name: "Liste", value: word.liste, inline: true },
-        { name: "Kelime", value: word.keyword, inline: true },
+        { name: "Liste", value: toTitleCase(listeAdi), inline: true },
+        { name: "Kelime", value: formattedKey, inline: true },
         {
           name: "Yasaklı Kelimeler",
-          value: word.yasaklar.map((y, i) => `**${i + 1}.** ${y}`).join("\n"),
+          value: toTitleCase(word.yasaklar.map((y, i) => `**${i + 1}.** ${y}`).join("\n")),
           inline: false,
         }
       )

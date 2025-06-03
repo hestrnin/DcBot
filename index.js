@@ -94,6 +94,7 @@ async function startBot() {
         }
 
         await test(channelKelimeler);
+        await interaction.editReply({ content: "🚀 Tüm kelimeler işlendi" });
       } catch (error) {
         console.error("❌ Toplu ekleme hatası:", error);
         await interaction.editReply({ content: "⚠️ Kelimeler eklenirken bir hata oluştu." });
