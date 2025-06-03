@@ -5,6 +5,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { EmbedBuilder } from 'discord.js';
 
+function toTitleCase(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 //Toplu Kelime Girme
 export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
   for (const word of kelimeListesi) {
@@ -20,13 +23,13 @@ export async function topluTabuKelimeleriEkle(interaction, kelimeListesi) {
 
     // Eğer bu keyword zaten varsa atla
     if (mevcutKelimeler.includes(yeniKelime)) {
-      await interaction.editReply({ content: `⚠️ '${word.keyword}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
-      console.log(`⚠️ '${word.keyword}' kelimesi '${listeAdi}' listesinde zaten var, atlandı.`);
+      await interaction.editReply({ content: `⚠️ '${toTitleCase(word.keyword)}'  kelimesi  '${word.liste}'  listesinde zaten var.`});
+      console.log(`⚠️ '${toTitleCase(word.keyword)}' kelimesi '${listeAdi}' listesinde zaten var, atlandı.`);
       continue;
     }
 
     // Yeni kelimeyi listeye ekle
-    kelimeler[yeniKelime] = word.yasaklar;
+    kelimeler[toTitleCase(yeniKelime)] = word.yasaklar;
 
     // Güncellenmiş listeyi veritabanına yaz
     await docRef.set(kelimeler);
