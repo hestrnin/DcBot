@@ -3,7 +3,11 @@ import { addTabuWordToList } from '../utils/firebase-tabuwords.js';
 import db from "../firebase.js";
 
 function toTitleCase(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+   return str
+    .toLocaleLowerCase('tr-TR')
+    .split(' ')
+    .map(word => word.charAt(0).toLocaleUpperCase('tr-TR') + word.slice(1))
+    .join(' ');
 }
 
 export default {
